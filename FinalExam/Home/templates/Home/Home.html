@@ -7,6 +7,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <!--Bootstrap link -->
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+        
        </head>
        <body>
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -29,26 +30,102 @@
                 </div>
             </div>
         </nav>
-        <main>
-            <h1>HOME PAGE</h1>
-            {% extends 'admin/base.html' %}
-            {% block content %}
-                <div>
-                    <form action="." method="POST" enctype="multipart/form-data">
-                    {{ form.as_p }}
-                    {% csrf_token %}
-                        <button type="submit">Upload File</button>
-                    </form>
+        <main class="aling-content-center py-2 text-center">
+            <h3 class='mt-5'>HOME PAGE</h3>
+            <div class="container mt-5">
+                <form class="py-2  border border-dark">
+                    <div class="row row-cols-1 row-cols-lg-2 ">
+                        <div class="col">
+                            <input class="form-input d-inline" type="file" id="txtFileUpload" value="Choose file"/>
+                        </div>
+                        <div class="col py-md-1 py-sm-1">
+                            <input class="btn btn-primary d-inline" type="button" id="upload" value="Upload" onclick="uploadFile()" />
+                        </div>
+                    </div>
+                </form>
+                <hr />
+                <div class="table-active align-self-center" id="dvCSV">
                 </div>
-            {% endblock %}
-            {% extends "admin/change_list.html" %}
-            {% load static %}
-            {% block content %}
-
-            <a href="upload-csv/">Upload a csv file</a>
-            {{ block.super }}               
-            {% endblock %}
+            </div>
+            <div class="table-responsive">
+                <table class="table table-striped table-sm">
+                    <tbody id="entries">
+                        <!--results go here-->
+                    </tbody>
+               
+                </table>
+            </div>
         </main>
        </body>
-   </html>
+    <script type="text/javascript">
+               function Upload() {
+                    var fileUpload = document.getElementById("fileUpload");
+                    var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.csv|.txt)$/;
+                    if (regex.test(fileUpload.value.toLowerCase())) {
+                        if (typeof (FileReader) != "undefined") {
+                            var reader = new FileReader();
+                            reader.onload = function (e) {
+                                var table = document.createElement("table");
+                                var rows = e.target.result.split("\n");
+                                for (var i = 0; i < rows.length; i++) {
+                                    var cells = rows[i].split(",");
+                                    if (cells.length > 1) {
+                                        var row = table.insertRow(-1);
+                                        for (var j = 0; j < cells.length; j++) {
+                                            var cell = row.insertCell(-1);
+                                            cell.innerHTML = cells[j];
+                                        }
+                                    }
+                                }
+                                var dvCSV = document.getElementById("dvCSV");
+                                dvCSV.innerHTML = "";
+                                dvCSV.appendChild(table);
+                            }
+                            reader.readAsText(fileUpload.files[0]);
+                        } else {
+                            alert("This browser does not support HTML5.");
+                        }
+                    } else {
+                        alert("Please upload a valid CSV file.");
+                    }
+                }
+                   
+    </script>
+    <script type="text/javascript">
+            
+                
+        //Method that checls that the browser supports HTML5 File API
+        function browserSupportFileUpload(){
+            var isCompatible=false;
+            if(window.File && window.FileReader && window.FileList && window.Blob){
+                isCompatible=true;
+            }
+            return isCompatible;
+        }
+        //Method that reads and processes the selected file
+        function uploadFile(){
+            if(!browserSupportFileUpload()){
+                alert('File not supported');
+            }else{
+                var data=null;
+                var file=document.getElementById("fileUpload");
+                var reader=new FileReader();
+                reader.readAsText(file);
+                reader.onload=function(event){
+                    var csvData=event.target.result;
+                    data=$.csv.toArrays(csvData);
+                    if(data&&data.length>0){
+                        alert('Imported -' +data.length+'-rows successfully!')
+                    }else{
+                        alert('No data to import!');
+                    }
+                };
+                reader.onerror=function(){
+                    alert('unable to read'+file.fileName);
+                };
+            }
+        }   
+ </script>
+
+    </html>
 
