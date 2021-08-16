@@ -35,7 +35,7 @@ def register(request):
         Email {}
         '''. format(data['name'],data['username'],data['email'])
 
-        send_mail(subject='New User', message = message, from_email='', recipient_list=['tanjajt@gmail.com'])
+        send_mail(subject='New User', message = message, from_email='', recipient_list=['xiaomei.mandy.li@gmail.com'])
         return redirect('register')
     else:
        form = UserRegisterForm()

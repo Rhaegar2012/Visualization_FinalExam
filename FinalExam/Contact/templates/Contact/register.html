@@ -41,6 +41,15 @@
         </nav>
 
 <h1>Users</h1>
+<div class = "col py-md-1 py-sm-2">
+    <div class="card border-info mb-3" style="max-width: 18rem;">
+      <div class="card-header">User Counter</div>
+      <div class="card-body text-info">
+        <h5 class="card-title">Number of Users</h5>
+        <p class="card-text">Total Number of Registered Users on this site is <label id='counter_label'>0</label></p> 
+      </div>
+    </div>
+  </div>
       <div class = "col py-md-1 py-sm-2">
           <form method="POST">
               {% csrf_token %} 
@@ -49,18 +58,17 @@
                </fieldset>
       
               <div class="form-group">
-               <button class="btn btn-outline-info" type="submit">Register</button>
+               <button class="btn btn-outline-info" type="submit" onclick=updateCounter()>Register</button>
         </form>
       </div>
-      <div class = "col py-md-1 py-sm-2">
-        <div class="card border-info mb-3" style="max-width: 18rem;">
-          <div class="card-header">User Counter</div>
-          <div class="card-body text-info">
-            <h5 class="card-title">Number of Users</h5>
-            <p class="card-text">Total Number of Registered Users on this site is <script>document.write(counter) </script></p> 
-          </div>
-        </div>
-      </div>
+      
     </body>
+    <script type='text/javascript'>
+        var user_count=0;
+        function updateCounter(){
+            user_count+=1;
+            document.getElementById("counter_label").innerHTML=user_count;
+        }
+    </script>
 </html>        
       
