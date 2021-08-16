@@ -1,0 +1,54 @@
+   <!DOCTYPE html>
+   <html>
+       <head>
+        <title>Final Exam Summer 2021</title>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <!--Bootstrap link -->
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+       </head>
+       <body>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">Crime Data App</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="/Home/templates/Home/Home.html">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Contact/templates/Contact/Contact.html">Contact Us</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <main>
+            <h1>HOME PAGE</h1>
+            {% extends 'admin/base.html' %}
+            {% block content %}
+                <div>
+                    <form action="." method="POST" enctype="multipart/form-data">
+                    {{ form.as_p }}
+                    {% csrf_token %}
+                        <button type="submit">Upload File</button>
+                    </form>
+                </div>
+            {% endblock %}
+            {% extends "admin/change_list.html" %}
+            {% load static %}
+            {% block content %}
+
+            <a href="upload-csv/">Upload a csv file</a>
+            {{ block.super }}               
+            {% endblock %}
+        </main>
+       </body>
+   </html>
+
