@@ -10,7 +10,14 @@
      <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
   integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-    
+        <script type="text/javascript">
+            var counter = 0;
+            function increment(){
+                counter++;
+            }
+        </script>
+    </head>
+
     <body>
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container-fluid">
@@ -50,8 +57,10 @@
           <div class="card-header">User Counter</div>
           <div class="card-body text-info">
             <h5 class="card-title">Number of Users</h5>
-            <p class="card-text">Total Number of Registered Users on this site is</p>
+            <p class="card-text">Total Number of Registered Users on this site is <script>document.write(counter) </script></p> 
           </div>
         </div>
-        
+      </div>
+    </body>
+</html>        
       
