@@ -19,7 +19,23 @@ def register(request):
       if form.is_valid(): 
         form.save()
         username = form.cleaned_data.get('username')
-        send_mail(subject='New User', message='You have a new User on your website', from_email='xiaomei.mandy.li@gmail.com', recipient_list=['tanjajt@gmail.com'])
+        name= form.cleaned_data.get('name')
+        email = form.cleaned_data.get('email')
+
+        data = {
+            'name':name,
+            'username': username,
+            'email':email
+        }
+
+        message = '''
+        New user signed up to our website. 
+        Name {}
+        User {}
+        Email {}
+        '''. format(data['name'],data['username'],data['email'])
+
+        send_mail(subject='New User', message = message, from_email='', recipient_list=['tanjajt@gmail.com'])
         return redirect('register')
     else:
        form = UserRegisterForm()
