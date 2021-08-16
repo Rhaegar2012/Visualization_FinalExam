@@ -7,7 +7,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <!--Bootstrap link -->
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-        
+        <!--Plotly-->
+        <script src="https://cdn.plot.ly/plotly-2.3.1.min.js"></script>
        </head>
        <body>
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -24,19 +25,26 @@
                             <a class="nav-link active" aria-current="page" href="/Home/templates/Home/Home.html">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="http://127.0.0.1:8000/Contact">Contact Us</a>
+                            <a class="nav-link" href="http://127.0.0.1:8000/register">Contact Us</a>
                         </li>
                     </ul>
                 </div>
             </div>
         </nav>
-        <main class="aling-content-center py-2 text-center">
-            <h3 class='mt-5'>HOME PAGE</h3>
+        <main class="aling-content-center py-2">
+            <div class='text-center'>
+                <h3 class='mt-5'>HOME PAGE</h3>
+            </div>
+            <div class='container'>
+                <div class='text-start mt-2'>
+                    <h4>Load a csv file from your local drive</h4>
+                </div>
+            </div>
             <div class="container mt-5">
                 <form class="py-2  border border-dark">
                     <div class="row row-cols-1 row-cols-lg-2 ">
                         <div class="col">
-                            <input class="form-input d-inline" type="file" id="txtFileUpload" value="Choose file"/>
+                            <input class=" d-inline-flex text-center mt-2 " type="file" id="txtFileUpload" value="Choose file"/>
                         </div>
                         <div class="col py-md-1 py-sm-1">
                             <input class="btn btn-primary d-inline" type="button" id="upload" value="Display top 100 rows" onclick="displayTopRows()" />
@@ -47,19 +55,28 @@
                 <div class="table-active align-self-center" id="dvCSV">
                 </div>
             </div>
-            <div class="container">
-                <div class="table-responsive">
-                    <table class="table table-striped">
-                        <thead class="text-center" id="headers">
-                            <!--headers go here-->
-                        </thead>
-                        <tbody id="entries">
-                            <!--results go here-->
-                        </tbody>
-                   
-                    </table>
+            <div class="row">
+                <div class="col">
+                    <div class="container">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead class="text-center" id="headers">
+                                    <!--headers go here-->
+                                </thead>
+                                <tbody id="entries">
+                                    <!--results go here-->
+                                </tbody>
+                           
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div id="pie_chart"></div>
+                    <div id="bar_chart"></div>
                 </div>
             </div>
+       
       
             <pre id="output"></pre>
         </main>
@@ -136,7 +153,78 @@
                 }
 
             }
+            var pieChartData= dataForPieChart(csvArray);
+            var barChartData= dataForBarChart(csvArray);
+            generatesPieChart(pieChartData);
+            generatesBarChart(barChartData);
         }
+        //Creates data for pie chart
+        function dataForPieChart(csvArray){
+            var neighBorhoodCount={}
+            for(let i=0;i<csvArray.length;i++){
+                if(!(csvArray[i]['NEIGHBOURHOOD'] in neighBorhoodCount) ){
+                    neighBorhoodCount[csvArray[i]['NEIGHBOURHOOD']]=1;
+
+                }else{
+                    neighBorhoodCount[csvArray[i]['NEIGHBOURHOOD']]+=1;
+                }
+            }
+            return neighBorhoodCount;
+        
+
+        }
+        function dataForBarChart(csvArray){
+            var yearCount={}
+            for(let i=0;i<csvArray.length;i++){
+                if(!(csvArray[i]['YEAR'] in yearCount) ){
+                    yearCount[csvArray[i]['YEAR']]=1;
+
+                }else{
+                    yearCount[csvArray[i]['YEAR']]+=1;
+                }
+            }
+            return yearCount;
+        }
+        //Generates pie chart using plotly
+        function generatesPieChart(dataArray){
+            var layout = {
+                height: 400,
+                width: 400
+            };
+            var values=[];
+            var labels=[];
+            type='pie'
+            for(var key in dataArray){
+                values.push(dataArray[key]);
+                labels.push(key);
+            }
+            var data=[{
+                values,
+                labels,
+                type
+            }];
+            Plotly.newPlot('pie_chart',data,layout);
+        }
+        //Generates bar chart using plotly 
+        function generatesBarChart(dataArray){
+            var layout = {
+                height: 400,
+                width: 400
+            };
+            var values=[];
+            var labels=[];
+            for(var key in dataArray){
+                values.push(dataArray[key]);
+                labels.push(key);
+            }
+            var data=[{
+                x:labels,
+                y:values,
+                type:'bar'
+            }];
+            Plotly.newPlot('bar_chart',data);
+        }
+
 </script>
 
 </html>
