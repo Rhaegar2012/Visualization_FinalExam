@@ -39,7 +39,7 @@
                             <input class="form-input d-inline" type="file" id="txtFileUpload" value="Choose file"/>
                         </div>
                         <div class="col py-md-1 py-sm-1">
-                            <input class="btn btn-primary d-inline" type="button" id="upload" value="Upload" onclick="uploadFile()" />
+                            <input class="btn btn-primary d-inline" type="button" id="upload" value="Display top 100 rows" onclick="displayTopRows()" />
                         </div>
                     </div>
                 </form>
@@ -47,28 +47,96 @@
                 <div class="table-active align-self-center" id="dvCSV">
                 </div>
             </div>
-            <div class="table-responsive">
-                <table class="table table-striped table-sm">
-                    <tbody id="entries">
-                        <!--results go here-->
-                    </tbody>
-               
-                </table>
+            <div class="container">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead class="text-center" id="headers">
+                            <!--headers go here-->
+                        </thead>
+                        <tbody id="entries">
+                            <!--results go here-->
+                        </tbody>
+                   
+                    </table>
+                </div>
             </div>
+      
             <pre id="output"></pre>
         </main>
        </body>
 <script type="text/javascript">
+        var csvData;
+        var csvArray;
          document.getElementById('txtFileUpload')
             .addEventListener('change', function() {
           
         var fr=new FileReader();
         fr.onload=function(){
             alert('File uploaded');
-            document.getElementById('output')
-                    .textContent=fr.result;
+            csvData=fr.result;
+            csvArray=csvtoArray(csvData);
+            //document.getElementById('output')
+                    //.textContent=fr.result;
         }
+        
         fr.readAsText(this.files[0]);})
+
+        //Parses csv to javascript array 
+        function csvtoArray(str,delimeter=","){
+            const headers=str.slice(0,str.indexOf("\n")).split(delimeter);
+            const rows= str.slice(str.indexOf("\n")+1).split("\n");
+            const arr=rows.map(function(row){
+                const values=row.split(delimeter);
+                const el=headers.reduce(function(object,header,index){
+                    object[header]=values[index];
+                    return object;
+                },{});
+                return el;
+            });
+            return arr;
+        }
+
+        //Display top rows
+        function displayTopRows(array=csvArray){
+            let numberOfRows = array.length;
+            let numberOfColumns=Object.keys(array[0]).length;
+            let templateHeader=''
+            let templateRow=''
+            let table=''
+            //Write table headers 
+            for(var key in array[0]){
+                templateHeader+=`<th>${key}</th>`;
+            }
+            table+=`<tr>${templateHeader}</tr>`;
+            document.getElementById("headers").innerHTML=table;
+            table=''
+            if(numberOfRows<100){
+                for(let i=2;i<numberOfRows-1;i++){
+                    for(var key in array[0]){
+                        var cell=array[i][key];
+                        console.log(cell);
+                        templateRow+=`<td>${cell}</td>`
+                    }
+                    templateRow=`<tr>${templateRow}</tr>`
+                    table+=templateRow;
+                    document.getElementById("entries").innerHTML=table;
+                    templateRow='';
+                }
+            }else{
+                for(let i=2;i<99;i++){
+                    for(var key in array[0]){
+                        var cell=array[i][key];
+                        console.log(cell);
+                        templateRow+=`<td>${cell}</td>`
+                    }
+                    templateRow=`<tr>${templateRow}</tr>`
+                    table+=templateRow;
+                    document.getElementById("entries").innerHTML=table;
+                    templateRow='';
+                }
+
+            }
+        }
 </script>
 
 </html>
