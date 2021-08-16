@@ -55,77 +55,21 @@
                
                 </table>
             </div>
+            <pre id="output"></pre>
         </main>
        </body>
-    <script type="text/javascript">
-               function Upload() {
-                    var fileUpload = document.getElementById("fileUpload");
-                    var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.csv|.txt)$/;
-                    if (regex.test(fileUpload.value.toLowerCase())) {
-                        if (typeof (FileReader) != "undefined") {
-                            var reader = new FileReader();
-                            reader.onload = function (e) {
-                                var table = document.createElement("table");
-                                var rows = e.target.result.split("\n");
-                                for (var i = 0; i < rows.length; i++) {
-                                    var cells = rows[i].split(",");
-                                    if (cells.length > 1) {
-                                        var row = table.insertRow(-1);
-                                        for (var j = 0; j < cells.length; j++) {
-                                            var cell = row.insertCell(-1);
-                                            cell.innerHTML = cells[j];
-                                        }
-                                    }
-                                }
-                                var dvCSV = document.getElementById("dvCSV");
-                                dvCSV.innerHTML = "";
-                                dvCSV.appendChild(table);
-                            }
-                            reader.readAsText(fileUpload.files[0]);
-                        } else {
-                            alert("This browser does not support HTML5.");
-                        }
-                    } else {
-                        alert("Please upload a valid CSV file.");
-                    }
-                }
-                   
-    </script>
-    <script type="text/javascript">
-            
-                
-        //Method that checls that the browser supports HTML5 File API
-        function browserSupportFileUpload(){
-            var isCompatible=false;
-            if(window.File && window.FileReader && window.FileList && window.Blob){
-                isCompatible=true;
-            }
-            return isCompatible;
+<script type="text/javascript">
+         document.getElementById('txtFileUpload')
+            .addEventListener('change', function() {
+          
+        var fr=new FileReader();
+        fr.onload=function(){
+            alert('File uploaded');
+            document.getElementById('output')
+                    .textContent=fr.result;
         }
-        //Method that reads and processes the selected file
-        function uploadFile(){
-            if(!browserSupportFileUpload()){
-                alert('File not supported');
-            }else{
-                var data=null;
-                var file=document.getElementById("fileUpload");
-                var reader=new FileReader();
-                reader.readAsText(file);
-                reader.onload=function(event){
-                    var csvData=event.target.result;
-                    data=$.csv.toArrays(csvData);
-                    if(data&&data.length>0){
-                        alert('Imported -' +data.length+'-rows successfully!')
-                    }else{
-                        alert('No data to import!');
-                    }
-                };
-                reader.onerror=function(){
-                    alert('unable to read'+file.fileName);
-                };
-            }
-        }   
- </script>
+        fr.readAsText(this.files[0]);})
+</script>
 
-    </html>
+</html>
 
